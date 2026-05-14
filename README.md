@@ -54,5 +54,5 @@ mingw32-make
 
 1. 运行 `DeepSeekTranslator.exe`（后台常驻，无窗口）
 2. 框选任意文本
-3. 按下配置的快捷键
+3. 按下配置的快捷键(不推荐用Alt,经常占用)
 4. 自动打开 DeepSeek 网页版并填入剪贴板内容
