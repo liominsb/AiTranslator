@@ -210,7 +210,7 @@ void GenerateDefaultConfig()
 
     file << "# 全局快捷键设置\n";
     file << "hotkey:\n";
-    file << "  mode: \"alt\"    # 可选: alt / ctrl / shift\n";
+    file << "  mode: \"ctrl\"    # 可选: alt / ctrl / shift\n";
     file << "  key: \"Q\"       # 支持: 字母(A-Z)、数字(0-9)、功能键(F1-F12)\n\n";
     file << "# DeepSeek官方网页版地址（无需?q=参数，程序会自动粘贴文本）\n";
     file << "url: \"https://chat.deepseek.com/a/chat\"\n\n";
@@ -234,7 +234,7 @@ bool LoadConfig()
     {
         YAML::Node node = YAML::LoadFile("config.yml");
 
-        std::string mode = node["hotkey"]["mode"].as<std::string>("alt");
+        std::string mode = node["hotkey"]["mode"].as<std::string>("ctrl");
         if (mode == "ctrl")
             g_config.keyMode = MOD_CONTROL;
         else if (mode == "shift")
@@ -252,7 +252,7 @@ bool LoadConfig()
         g_config.chineseThreshold = node["language"]["chinese_threshold"].as<double>(0.3);
 
         std::string enToZh = node["prompt"]["en_to_zh"].as<std::string>(
-            "把下面这段文字翻译成通顺自然的中文，保留专业术语和格式，不要添加额外解释：\n");
+            "把下面这段文字或单词翻译成通顺自然的中文，保留专业术语和格式，不要添加额外解释：\n");
         std::string zhToEn = node["prompt"]["zh_to_en"].as<std::string>(
             "把下面这段文字翻译成地道流畅的英文，符合母语表达习惯，保留专业术语：\n");
         g_config.promptEnToZh = StringToWstring(enToZh);
@@ -273,6 +273,8 @@ bool LoadConfig()
     // 兜底默认值
     if (g_config.hotKey == 0)
         g_config.hotKey = 'Q';
+    if (g_config.keyMode == 0)
+        g_config.keyMode = MOD_CONTROL;
     if (g_config.baseUrl.empty())
         g_config.baseUrl = L"https://chat.deepseek.com/a/chat";
     if (g_config.maxWaitMs < 10)
@@ -280,7 +282,7 @@ bool LoadConfig()
     if (g_config.chineseThreshold < 0.1 || g_config.chineseThreshold > 0.9)
         g_config.chineseThreshold = 0.3;
     if (g_config.promptEnToZh.empty())
-        g_config.promptEnToZh = L"翻译成中文：\n";
+        g_config.promptEnToZh = L"把下面这段文字或单词翻译成通顺自然的中文，保留专业术语和格式，不要添加额外解释：\n";
     if (g_config.promptZhToEn.empty())
         g_config.promptZhToEn = L"翻译成英文：\n";
 
